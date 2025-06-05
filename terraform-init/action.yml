@@ -1,0 +1,38 @@
+name: Terraform Init
+description: Composite action to checkout code and run Terraform init
+
+inputs:
+  working-directory:
+    description: Directory where Terraform code is located
+    required: false
+    default: .
+
+  aws-oidc-role:
+    description: AWS OIDC Role
+    required: true
+
+  aws-region:
+    description: AWS Region (for backend and provider)
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.12.1
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.aws_oidc_role }}
+        role-session-name: github-oidc
+        aws-region: ${{ inputs.aws_region }}
+
+    - name: Terraform Init
+      shell: bash
+      run: terraform -chdir=${{ inputs.working-directory }} init -input=false
