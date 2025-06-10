@@ -38,6 +38,10 @@ runs:
       shell: bash
       run: terraform -chdir=${{ inputs.working-directory }} init -input=false
 
+    - name: Terraform Format
+      shell: bash
+      run: terraform -chdir=${{ inputs.working-directory }} fmt -check
+
     - name: Terraform Validate
       shell: bash
       run: terraform -chdir=${{ inputs.working-directory }} validate
