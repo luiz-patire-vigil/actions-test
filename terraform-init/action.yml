@@ -1,9 +1,9 @@
 name: Terraform Init
 description: Composite action to checkout code and run Terraform init
 
-permissions:
-  id-token: write
-  contents: read
+# permissions:
+#   id-token: write
+#   contents: read
 
 inputs:
   working-directory:
@@ -40,7 +40,7 @@ runs:
 
     - name: Terraform Format
       shell: bash
-      run: terraform -chdir=${{ inputs.working-directory }} fmt -check
+      run: terraform -chdir=${{ inputs.working-directory }} fmt -check -recursive
 
     - name: Terraform Validate
       shell: bash
