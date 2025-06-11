@@ -19,6 +19,11 @@ inputs:
     description: AWS Region (for backend and provider)
     required: true
 
+  modules-private-keys:
+    description: AWS Region (for backend and provider)
+    required: false
+    default: null
+
 runs:
   using: "composite"
   steps:
@@ -33,6 +38,12 @@ runs:
         role-to-assume: ${{ inputs.aws-oidc-role }}
         role-session-name: github-oidc
         aws-region: ${{ inputs.aws-region }}
+
+    - name: Setup Terraform Modules Private Keys
+      if: ${{ inputs.modules-private-keys != '' && inputs.modules-private-keys != null }}
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+          ssh-private-key: ${{ secrets.TF_MODULES_PRIVATE_KEY }}
 
     - name: Terraform Init
       shell: bash
