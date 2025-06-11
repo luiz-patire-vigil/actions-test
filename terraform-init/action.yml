@@ -43,7 +43,7 @@ runs:
       if: ${{ inputs.modules-private-keys != '' && inputs.modules-private-keys != null }}
       uses: webfactory/ssh-agent@v0.9.0
       with:
-          ssh-private-key: ${{ secrets.TF_MODULES_PRIVATE_KEY }}
+          ssh-private-key: ${{ inputs.modules-private-keys }}
 
     - name: Terraform Init
       shell: bash
