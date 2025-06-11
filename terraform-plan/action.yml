@@ -11,19 +11,6 @@ inputs:
     required: false
     default: .
 
-  aws-oidc-role:
-    description: AWS OIDC Role
-    required: true
-
-  aws-region:
-    description: AWS Region (for backend and provider)
-    required: true
-
-  modules-private-keys:
-    description: AWS Region (for backend and provider)
-    required: false
-    default: null
-
 runs:
   using: "composite"
   steps:
