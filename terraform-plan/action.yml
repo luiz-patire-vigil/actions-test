@@ -1,0 +1,32 @@
+name: Terraform Init
+description: Composite action to checkout code and run Terraform init
+
+# permissions:
+#   id-token: write
+#   contents: read
+
+inputs:
+  working-directory:
+    description: Directory where Terraform code is located
+    required: false
+    default: .
+
+  aws-oidc-role:
+    description: AWS OIDC Role
+    required: true
+
+  aws-region:
+    description: AWS Region (for backend and provider)
+    required: true
+
+  modules-private-keys:
+    description: AWS Region (for backend and provider)
+    required: false
+    default: null
+
+runs:
+  using: "composite"
+  steps:
+    - name: Terraform Plan
+      shell: bash
+      run: terraform -chdir=${{ inputs.working-directory }} plan

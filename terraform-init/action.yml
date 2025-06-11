@@ -56,7 +56,3 @@ runs:
     - name: Terraform Validate
       shell: bash
       run: terraform -chdir=${{ inputs.working-directory }} validate
-
-    - name: Terraform Plan
-      shell: bash
-      run: terraform -chdir=${{ inputs.working-directory }} plan
