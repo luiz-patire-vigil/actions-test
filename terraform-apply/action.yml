@@ -16,4 +16,4 @@ runs:
 
     - name: Terraform Apply
       shell: bash
-      run: terraform apply -auto-approve tfplan
+      run: terraform -chdir=${{ inputs.working-directory }} apply -auto-approve tfplan
