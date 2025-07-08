@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        working-directory: ${{ fromJson(inputs.dirs) }}
+        working-directory: ${{ inputs.dirs }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
