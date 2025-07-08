@@ -1,0 +1,37 @@
+name: Validate Terraform on Push
+
+on:
+  workflow_call:
+    inputs:
+      dirs:
+        description: 'Dir list to run the workflow on'
+        default: '[]'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        working-directory: ${{ fromJson(inputs.dirs) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: ./terraform-init
+        with:
+          working-directory: ${{ matrix.working-directory }}
+          aws-role-to-assume: ${{ secrets.AWS_ROLE || null}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID || null}}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY || null}}
+          aws-region: ${{ secrets.AWS_REGION }}
+          modules-private-keys : ${{ secrets.TF_MODULES_PRIVATE_KEY }}
+
+      - uses: ./terraform-plan
+        with:
+          working-directory: ${{ matrix.working-directory }}
