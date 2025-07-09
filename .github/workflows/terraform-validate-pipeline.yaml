@@ -23,7 +23,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - uses: ./terraform-init
+      - uses: luiz-patire-vigil/actions-test/terraform-init@main
         with:
           working-directory: ${{ matrix.working-directory }}
           aws-role-to-assume: ${{ secrets.AWS_ROLE || null}}
@@ -32,6 +32,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           modules-private-keys : ${{ secrets.TF_MODULES_PRIVATE_KEY }}
 
-      - uses: ./terraform-plan
+      - uses: luiz-patire-vigil/actions-test/terraform-plan@main
         with:
           working-directory: ${{ matrix.working-directory }}
