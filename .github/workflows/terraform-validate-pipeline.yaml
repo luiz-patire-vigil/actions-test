@@ -9,31 +9,26 @@ on:
         required: true
         type: string
 
+    secrets:
       aws-role-to-assume:
-        type: string
         description: AWS Role to assume. Required for OIDC.
         required: false
 
       aws-region:
-        type: string
         description: AWS Region (for backend and provider)
         required: false
 
       aws-access-key-id:
-        type: string
         description: AWS Access Key ID. Provide this key if you want to assume a role using access keys rather than a web identity token.
         required: false
 
       aws-secret-access-key:
-        type: string
         description: AWS Secret Access Key. Required if aws-access-key-id is provided.
         required: false
 
       modules-private-keys:
-        type: string
         description: AWS Region (for backend and provider)
         required: false
-        default: null
 
 permissions:
   id-token: write
@@ -52,11 +47,11 @@ jobs:
       - uses: luiz-patire-vigil/actions-test/terraform-init@main
         with:
           working-directory: ${{ matrix.working-directory }}
-          aws-role-to-assume: ${{ inputs.aws-role-to-assume || null}}
-          aws-access-key-id: ${{ inputs.aws-access-key-id || null}}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key || null}}
-          aws-region: ${{ inputs.aws-region }}
-          modules-private-keys : ${{ inputs.modules-private-keys }}
+          aws-role-to-assume: ${{ secrets.aws-role-to-assume || null}}
+          aws-access-key-id: ${{ secrets.aws-access-key-id || null}}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key || null}}
+          aws-region: ${{ secrets.aws-region }}
+          modules-private-keys : ${{ secrets.modules-private-keys }}
 
       - uses: luiz-patire-vigil/actions-test/terraform-plan@main
         with:
