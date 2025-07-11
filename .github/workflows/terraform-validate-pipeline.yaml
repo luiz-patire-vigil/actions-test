@@ -62,7 +62,7 @@ jobs:
           dirs_json=$(printf '%s\n' "${CLEAN_DIRS[@]}" | jq -R . | jq -s -c .)
           echo "Converted directories to JSON (no line breaks): $dirs_json"
 
-          echo "directories=$dirs_json" >> $GITHUB_OUTPUT
+          echo "dirs=$dirs_json" >> $GITHUB_OUTPUT
 
       - name: Detect changed directories (fallback)
         id: detect-changes
