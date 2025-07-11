@@ -38,7 +38,7 @@ jobs:
   set-working-directory-values:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.set-input.outputs.dirs || steps.detect-changes.outputs.dirs }}
+      dirs: ${{ steps.set-input.outputs.dirs || steps.detect-changes.outputs.dirs }}
     steps:
       - name: Use input directories
         id: set-input
