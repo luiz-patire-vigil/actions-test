@@ -50,17 +50,19 @@ jobs:
           IFS=',' read -ra DIRS <<< "${{ inputs.dirs }}"
           CLEAN_DIRS=()
           for dir in "${DIRS[@]}"; do
-            # Trim leading/trailing whitespace using parameter expansion
-            clean_dir="${dir#"${dir%%[![:space:]]*}"}"  # leading
-            clean_dir="${clean_dir%"${clean_dir##*[![:space:]]}"}"  # trailing
-            CLEAN_DIRS+=("$clean_dir")
+            clean_dir="${dir#"${dir%%[![:space:]]*}"}"  # trim leading
+            clean_dir="${clean_dir%"${clean_dir##*[![:space:]]}"}"  # trim trailing
+
+            if [ -n "$clean_dir" ]; then
+              CLEAN_DIRS+=("$clean_dir")
+            fi
           done
 
-          # Convert to JSON array string
-          dirs_json="[${CLEAN_DIRS[*]}]"
-          echo "Converted directories to JSON: $dirs_json"
+          # Build compact JSON array safely
+          dirs_json=$(printf '%s\n' "${CLEAN_DIRS[@]}" | jq -R . | jq -s -c .)
+          echo "Converted directories to JSON (no line breaks): $dirs_json"
 
-          echo "dirs=$dirs_json" >> $GITHUB_OUTPUT
+          echo "directories=$dirs_json" >> $GITHUB_OUTPUT
 
       - name: Detect changed directories (fallback)
         id: detect-changes
