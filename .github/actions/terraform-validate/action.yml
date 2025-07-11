@@ -1,0 +1,19 @@
+name: Terraform Init
+description: Composite action to checkout code and run Terraform init
+
+inputs:
+  working-directory:
+    description: Directory where Terraform code is located
+    required: false
+    default: .
+
+runs:
+  using: "composite"
+  steps:
+    - name: Terraform Format
+      shell: bash
+      run: terraform -chdir=${{ inputs.working-directory }} fmt -check -recursive
+
+    - name: Terraform Validate
+      shell: bash
+      run: terraform -chdir=${{ inputs.working-directory }} validate

@@ -88,6 +88,10 @@ jobs:
           aws-region: ${{ secrets.aws-region }}
           modules-private-keys : ${{ secrets.modules-private-keys }}
 
+      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-validate@main
+        with:
+          working-directory: ${{ matrix.working-directory }}
+
       - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan@main
         with:
           working-directory: ${{ matrix.working-directory }}
