@@ -19,10 +19,13 @@ runs:
       shell: bash
       run: |
         echo "Detecting modified directories (fallback)"
+        echo "Changed files detected: "
+        echo $(git diff --name-only origin/main...HEAD)
         folders=$(git diff --name-only origin/main...HEAD \
           | grep '\.tf$' \
           | xargs -n1 dirname \
           | sort -u \
           | jq -R . \
           | jq -sc .)
+        echo "Changed dirs detected:  $folders"
         echo "dirs=$folders" >> $GITHUB_OUTPUT
