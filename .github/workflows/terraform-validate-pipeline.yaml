@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       dirs:
-        description: "JSON array string of directories to check. If empty, detect changes."
+        description: "Comma-separated list of directories to check. If empty, detect changes."
         required: false
         type: string
         default: ''
@@ -44,8 +44,23 @@ jobs:
         id: set-input
         if: ${{ inputs.dirs != '' }}
         run: |
-          echo "Using input directories: ${{ inputs.dirs }}"
-          echo "dirs=${{ inputs.dirs }}" >> $GITHUB_OUTPUT
+          echo "Processing input directories: ${{ inputs.dirs }}"
+
+          # Convert comma-separated to array, trim whitespace
+          IFS=',' read -ra DIRS <<< "${{ inputs.dirs }}"
+          CLEAN_DIRS=()
+          for dir in "${DIRS[@]}"; do
+            # Trim leading/trailing whitespace using parameter expansion
+            clean_dir="${dir#"${dir%%[![:space:]]*}"}"  # leading
+            clean_dir="${clean_dir%"${clean_dir##*[![:space:]]}"}"  # trailing
+            CLEAN_DIRS+=("$clean_dir")
+          done
+
+          # Convert to JSON array string
+          dirs_json=$(printf '%s\n' "${CLEAN_DIRS[@]}" | jq -R . | jq -s .)
+          echo "Converted directories to JSON: $dirs_json"
+
+          echo "dirs=$dirs_json" >> $GITHUB_OUTPUT
 
       - name: Detect changed directories (fallback)
         id: detect-changes
