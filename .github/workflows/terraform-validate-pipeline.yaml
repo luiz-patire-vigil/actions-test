@@ -57,7 +57,7 @@ jobs:
           done
 
           # Convert to JSON array string
-          dirs_json=$(printf '%s\n' "${CLEAN_DIRS[@]}" | jq -R . | jq -s .)
+          dirs_json="[${CLEAN_DIRS[*]}]"
           echo "Converted directories to JSON: $dirs_json"
 
           echo "dirs=$dirs_json" >> $GITHUB_OUTPUT
