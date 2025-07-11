@@ -22,7 +22,7 @@ runs:
         echo "Changed files detected: "
         echo $(git diff --name-only origin/main...HEAD)
         folders=$(git diff --name-only origin/main...HEAD \
-          | grep '\.tf$' \
+          | grep -E '\.tf$|\.tfvars$' \
           | xargs -n1 dirname \
           | sort -u \
           | jq -R . \
