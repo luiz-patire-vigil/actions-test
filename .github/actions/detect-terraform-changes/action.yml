@@ -1,0 +1,28 @@
+name: Check modified 
+description: Composite action to checkout code and run Terraform init
+
+outputs:
+  dirs:
+    description: "Modified directories"
+    value: ${{ steps.check-dirs.outputs.dirs }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:  
+        fetch-depth: 0
+
+    - name: Check modified directories
+      id: check-dirs
+      shell: bash
+      run: |
+        echo "Detecting modified directories (fallback)"
+        folders=$(git diff --name-only origin/main...HEAD \
+          | grep '\.tf$' \
+          | xargs -n1 dirname \
+          | sort -u \
+          | jq -R . \
+          | jq -sc .)
+        echo "dirs=$folders" >> $GITHUB_OUTPUT

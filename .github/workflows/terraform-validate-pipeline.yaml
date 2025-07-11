@@ -4,10 +4,10 @@ on:
   workflow_call:
     inputs:
       dirs:
-        description: 'Dir list to run the workflow on'
-        default: '[]'
-        required: true
+        description: "JSON array string of directories to check. If empty, detect changes."
+        required: false
         type: string
+        default: ''
 
     secrets:
       aws-role-to-assume:
@@ -35,16 +35,30 @@ permissions:
   contents: read
 
 jobs:
+  set-working-directory-values:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use input directories
+        if: ${{ inputs.dirs != '' }}
+        run: |
+          echo "Using input directories: ${{ inputs.dirs }}"
+          echo "dirs=${{ inputs.dirs }}" >> $GITHUB_OUTPUT
+
+      - name: Detect changed directories (fallback)
+        if: ${{ inputs.dirs == '' }}
+        uses: luiz-patire-vigil/actions-test/.github/actions/detect-terraform-changes@main
+
   validate:
     runs-on: ubuntu-latest
+    needs: set-working-directory-values
     strategy:
       matrix:
-        working-directory: ${{ fromJson(inputs.dirs) }}
+        working-directory: ${{ fromJson(needs.set-working-directory-values.outputs.dirs) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - uses: luiz-patire-vigil/actions-test/terraform-init@main
+      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-init@main
         with:
           working-directory: ${{ matrix.working-directory }}
           aws-role-to-assume: ${{ secrets.aws-role-to-assume || null}}
@@ -53,6 +67,55 @@ jobs:
           aws-region: ${{ secrets.aws-region }}
           modules-private-keys : ${{ secrets.modules-private-keys }}
 
-      - uses: luiz-patire-vigil/actions-test/terraform-plan@main
+      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan@main
         with:
           working-directory: ${{ matrix.working-directory }}
+
+
+# .github/workflows/terraform-check.yml
+
+
+
+jobs:
+  prepare-dirs:
+    runs-on: ubuntu-latest
+
+    outputs:
+      directories: ${{ steps.setdirs.outputs.directories }}
+
+    env:
+      TARGET_DIRS: ${{ inputs.dirs || '' }}
+
+    steps:
+    - name: Determine directories to check
+      id: inputdirs
+      run: |
+        if [ -z "${TARGET_DIRS}" ]; then
+          echo "No input directories provided."
+          echo "run_detect_changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "Input directories provided: ${TARGET_DIRS}"
+          echo "run_detect_changes=false" >> $GITHUB_OUTPUT
+
+          IFS=',' read -ra DIRS <<< "$TARGET_DIRS"
+          dirs_json=$(printf '%s\n' "${DIRS[@]}" | jq -R . | jq -s .)
+          echo "directories=$dirs_json" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Detect changed directories (fallback)
+      if: steps.inputdirs.outputs.run_detect_changes == 'true'
+      id: detect
+      uses: your-org/detect-changes@v1
+      # add inputs here if needed
+
+    - name: Set final directories output
+      id: setdirs
+      run: |
+        if [ "${{ steps.inputdirs.outputs.run_detect_changes }}" == "true" ]; then
+          echo "Using directories from detect-changes output"
+          echo "directories=${{ steps.detect.outputs.dirs }}" >> $GITHUB_OUTPUT
+        else
+          echo "Using input directories"
+          echo "directories=${{ steps.inputdirs.outputs.directories }}" >> $GITHUB_OUTPUT
+        fi
+
