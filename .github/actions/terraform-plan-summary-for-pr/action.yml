@@ -26,7 +26,7 @@ runs:
           <details><summary>Show Plan</summary>
  
           \`\`\`\n
-          ${{ steps.plan.outputs.stdout }}
+          ${{ steps.plan.outputs.plan }}
           \`\`\`
  
           </details>`;
