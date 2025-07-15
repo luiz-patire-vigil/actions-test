@@ -1,5 +1,12 @@
 name: Terraform plan on PR
 
+# Workflows calling this workflow should set
+# permissions:
+#   id-token: write
+#   contents: read
+#   issues: write
+#   pull-requests: write
+
 on:
   workflow_call:
     inputs:
@@ -30,13 +37,13 @@ on:
         description: AWS Region (for backend and provider)
         required: false
 
-permissions:
-  # these are needed for terraform-init
-  id-token: write
-  contents: read
-  # thses are needed for terraform-plan-summary-for-pr
-  issues: write
-  pull-requests: write
+# permissions:
+#   # these are needed for terraform-init
+#   id-token: write
+#   contents: read
+#   # thses are needed for terraform-plan-summary-for-pr
+#   issues: write
+#   pull-requests: write
 
 jobs:
   set-working-directory-values:
