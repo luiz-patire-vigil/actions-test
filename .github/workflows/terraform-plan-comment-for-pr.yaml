@@ -71,9 +71,11 @@ jobs:
         uses: luiz-patire-vigil/actions-test/.github/actions/terraform-init@main
         with:
           working-directory: ${{ matrix.working-directory }}
-          aws-role-to-assume: ${{ secrets.AWS_ROLE || null}}
-          aws-region: ${{ secrets.AWS_REGION }}
-          modules-private-keys : ${{ secrets.TF_MODULES_PRIVATE_KEY }}
+          aws-role-to-assume: ${{ secrets.aws-role-to-assume || null}}
+          aws-access-key-id: ${{ secrets.aws-access-key-id || null}}
+          aws-secret-access-key: ${{ secrets.aws-secret-access-key || null}}
+          aws-region: ${{ secrets.aws-region }}
+          modules-private-keys : ${{ secrets.modules-private-keys }}
 
       - name: Create Plan Report on PR
         uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan-summary-for-pr@main
