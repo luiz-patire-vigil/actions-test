@@ -68,7 +68,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Terraform
-        uses: credis-uk/workflows/.github/actions/terraform-setup@main
+        uses: luiz-patire-vigil/actions-test/.github/actions/terraform-init@main
         with:
           working-directory: ${{ matrix.working-directory }}
           aws-role-to-assume: ${{ secrets.AWS_ROLE || null}}
@@ -76,6 +76,6 @@ jobs:
           modules-private-keys : ${{ secrets.TF_MODULES_PRIVATE_KEY }}
 
       - name: Create Plan Report on PR
-        uses: credis-uk/workflows/.github/actions/terraform-plan-summary-for-pr@main
+        uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan-summary-for-pr@main
         with:
           working-directory: ${{ matrix.working-directory }}

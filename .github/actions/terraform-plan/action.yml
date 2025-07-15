@@ -21,7 +21,7 @@ runs:
   using: "composite"
   steps:
     - name: Terraform Plan
-      if: tf-plan
+      id: tf-plan
       shell: bash
       run: |
         terraform -chdir=${{ inputs.working-directory }} plan
