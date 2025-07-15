@@ -24,4 +24,4 @@ runs:
       id: tf-plan
       shell: bash
       run: |
-        terraform -chdir=${{ inputs.working-directory }} plan
+        terraform -chdir=${{ inputs.working-directory }} plan -no-color

@@ -16,6 +16,27 @@ runs:
       with:
         working-directory: ${{ inputs.working-directory }}
 
+    - name: Delete Old Bot Comments
+      uses: actions/github-script@v7
+      with:
+        script: |
+          // List all comments
+          const { data: comments } = await github.rest.issues.listComments({
+            context.repo.owner,
+            context.repo.repo,
+            issue_number: context.issue.number,
+          });
+
+          // Filter out comments made by the bot and delete them
+          const botComments = comments.filter(comment => comment.user.login === author);
+          for (const comment of botComments) {
+            await github.rest.issues.deleteComment({
+              context.repo.owner,
+              context.repo.repo,
+              comment_id: comment.id,
+            });
+          }
+
     - name: Comment on Pull Request
       uses: actions/github-script@v7
       with:
