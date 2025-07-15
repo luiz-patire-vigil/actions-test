@@ -1,4 +1,4 @@
-name: Validate Terraform on Push
+name: Terraform plan on PR
 
 on:
   workflow_call:
@@ -34,6 +34,9 @@ permissions:
   # these are needed for terraform-init
   id-token: write
   contents: read
+  # thses are needed for terraform-plan-summary-for-pr
+  issues: write
+  pull-requests: write
 
 jobs:
   set-working-directory-values:
@@ -47,9 +50,9 @@ jobs:
         with:
           dir-list: ${{ inputs.dir-list }}
 
-  validate:
-    runs-on: ubuntu-latest
+  plan-report:
     needs: set-working-directory-values
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         working-directory: ${{ fromJson(needs.set-working-directory-values.outputs.dirs) }}
@@ -57,19 +60,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-init@main
+      - name: Setup Terraform
+        uses: credis-uk/workflows/.github/actions/terraform-setup@main
         with:
           working-directory: ${{ matrix.working-directory }}
-          aws-role-to-assume: ${{ secrets.aws-role-to-assume || null}}
-          aws-access-key-id: ${{ secrets.aws-access-key-id || null}}
-          aws-secret-access-key: ${{ secrets.aws-secret-access-key || null}}
-          aws-region: ${{ secrets.aws-region }}
-          modules-private-keys : ${{ secrets.modules-private-keys }}
+          aws-role-to-assume: ${{ secrets.AWS_ROLE || null}}
+          aws-region: ${{ secrets.AWS_REGION }}
+          modules-private-keys : ${{ secrets.TF_MODULES_PRIVATE_KEY }}
 
-      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-validate@main
-        with:
-          working-directory: ${{ matrix.working-directory }}
-
-      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan@main
+      - name: Create Plan Report on PR
+        uses: credis-uk/workflows/.github/actions/terraform-plan-summary-for-pr@main
         with:
           working-directory: ${{ matrix.working-directory }}

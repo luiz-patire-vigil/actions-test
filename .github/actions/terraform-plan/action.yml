@@ -1,9 +1,10 @@
 name: Terraform Init
 description: Composite action to checkout code and run Terraform init
 
+# Workflows using this action need the following permissions:
 # permissions:
-#   id-token: write
-#   contents: read
+#   issues: write
+#   pull-requests: write
 
 inputs:
   working-directory:
@@ -11,9 +12,16 @@ inputs:
     required: false
     default: .
 
+outputs:
+  plan:
+    description: Modified directories
+    value: ${{ steps.tf-plan.outputs.stdout }}
+
 runs:
   using: "composite"
   steps:
     - name: Terraform Plan
+      if: tf-plan
       shell: bash
-      run: terraform -chdir=${{ inputs.working-directory }} plan
+      run: |
+        terraform -chdir=${{ inputs.working-directory }} plan

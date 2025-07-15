@@ -1,6 +1,11 @@
 name: Terraform Init
 description: Composite action to checkout code and run Terraform init
 
+# Workflows using this action need the following permissions:
+# permissions:
+#   id-token: write
+#   contents: read
+
 inputs:
   working-directory:
     description: Directory where Terraform code is located

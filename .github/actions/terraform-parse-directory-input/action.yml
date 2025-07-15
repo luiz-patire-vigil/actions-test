@@ -1,0 +1,45 @@
+name: Terraform Handle Directory Input 
+description: Parses directory input or fallbacks to auto discovery 
+
+inputs:
+  dir-list:
+    description: Comma-separated list of directories to check. If empty, detect changes.
+    required: false
+    default: ""
+
+outputs:
+  dirs:
+    description: Modified directories
+    value: ${{ steps.set-input.outputs.dirs || steps.detect-changes.outputs.dirs }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Use input directories
+      id: set-input
+      if: ${{ inputs.dirs != '' }}
+      run: |
+        echo "Processing input directories: ${{ inputs.dirs }}"
+
+        # Convert comma-separated to array, trim whitespace
+        IFS=',' read -ra DIRS <<< "${{ inputs.dirs }}"
+        CLEAN_DIRS=()
+        for dir in "${DIRS[@]}"; do
+          clean_dir="${dir#"${dir%%[![:space:]]*}"}"  # trim leading
+          clean_dir="${clean_dir%"${clean_dir##*[![:space:]]}"}"  # trim trailing
+
+          if [ -n "$clean_dir" ]; then
+            CLEAN_DIRS+=("$clean_dir")
+          fi
+        done
+
+        # Build compact JSON array safely
+        dirs_json=$(printf '%s\n' "${CLEAN_DIRS[@]}" | jq -R . | jq -s -c .)
+        echo "Converted directories to JSON (no line breaks): $dirs_json"
+
+        echo "dirs=$dirs_json" >> $GITHUB_OUTPUT
+
+    - name: Detect changed directories (fallback)
+      id: detect-changes
+      if: ${{ inputs.dirs == '' }}
+      uses: luiz-patire-vigil/actions-test/.github/actions/terraform-detect-changes@main
