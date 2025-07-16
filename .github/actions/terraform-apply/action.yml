@@ -1,19 +1,15 @@
-name: Terraform Init
-description: Composite action to checkout code and run Terraform init
+name: Terraform Apply
+description: Run terraform plan and apply.
 
 inputs:
   working-directory:
-    description: Directory where Terraform code is located
+    description: Directory where Terraform code is located.
     required: false
     default: .
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Terraform Plan
-      shell: bash
-      run: terraform -chdir=${{ inputs.working-directory }} plan -out=tfplan
-
     - name: Terraform Apply
       shell: bash
-      run: terraform -chdir=${{ inputs.working-directory }} apply -auto-approve tfplan
+      run: terraform -chdir=${{ inputs.working-directory }} apply -auto-approve

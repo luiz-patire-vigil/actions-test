@@ -1,14 +1,14 @@
 name: Terraform Plan Summary for Pull Requests
-description: Run plan and reports it on a comment in a pull request
+description: Run plan and reports it on a comment in a pull request.
 
 inputs:
   working-directory:
-    description: Directory where Terraform code is located
+    description: Directory where Terraform code is located.
     required: false
     default: .
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Terraform Plan
       id: plan

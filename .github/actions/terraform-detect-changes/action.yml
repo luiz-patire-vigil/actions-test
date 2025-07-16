@@ -1,13 +1,13 @@
-name: Check modified 
-description: Composite action to checkout code and run Terraform init
+name: Detect Changes 
+description: Detect changes in terraform files within the directory tree, returning the directory list.
 
 outputs:
   dirs:
-    description: "Modified directories"
+    description: Modified directories.
     value: ${{ steps.check-dirs.outputs.dirs }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Checkout code
       uses: actions/checkout@v4

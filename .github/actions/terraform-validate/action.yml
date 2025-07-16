@@ -1,14 +1,14 @@
-name: Terraform Init
-description: Composite action to checkout code and run Terraform init
+name: Terraform Validate
+description: Composite action to check Terraform format and run validate.
 
 inputs:
   working-directory:
-    description: Directory where Terraform code is located
+    description: Directory where Terraform code is located.
     required: false
     default: .
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Terraform Format
       shell: bash

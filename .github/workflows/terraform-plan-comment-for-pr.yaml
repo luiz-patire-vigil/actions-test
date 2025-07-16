@@ -22,7 +22,7 @@ on:
         required: false
 
       aws-region:
-        description: AWS Region (for backend and provider)
+        description: AWS Region (for backend and provider).
         required: false
 
       aws-access-key-id:
@@ -34,16 +34,16 @@ on:
         required: false
 
       modules-private-keys:
-        description: AWS Region (for backend and provider)
+        description: Private key for TF to access the one-terraform-modules repository. 
         required: false
 
-# permissions:
-#   # these are needed for terraform-init
-#   id-token: write
-#   contents: read
-#   # thses are needed for terraform-plan-summary-for-pr
-#   issues: write
-#   pull-requests: write
+permissions:
+  # these are needed for terraform-init
+  id-token: write
+  contents: read
+  # thses are needed for terraform-plan-summary-for-pr
+  issues: write
+  pull-requests: write
 
 jobs:
   set-working-directory-values:

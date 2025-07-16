@@ -1,5 +1,5 @@
 name: Terraform Handle Directory Input 
-description: Parses directory input or fallbacks to auto discovery 
+description: Parses directory input or fallbacks to auto discovery.
 
 inputs:
   dir-list:
@@ -9,11 +9,11 @@ inputs:
 
 outputs:
   dirs:
-    description: Modified directories
+    description: Modified directories.
     value: ${{ steps.set-input.outputs.dirs || steps.detect-changes.outputs.dirs }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Use input directories
       shell: bash
