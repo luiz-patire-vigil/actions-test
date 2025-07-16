@@ -20,7 +20,7 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
-          const author = 'github-actions';
+          const author = 'github-actions[bot]';
           
           // List all comments
           const { data: comments } = await github.rest.issues.listComments({
@@ -28,7 +28,7 @@ runs:
             owner: context.repo.owner,
             repo: context.repo.repo,
           });
-
+          # TODO:continue here. comments are not being deleted
           // Filter out comments made by the bot and delete them
           const botComments = comments.filter(comment => comment.user.login === author);
           for (const comment of botComments) {
