@@ -33,8 +33,9 @@ runs:
           // Filter out comments made by the bot and delete them
           const botCommentsToDelete = comments.filter(comment => {
             if (comment.user.login !== author) return false;
+            console.log("START HERE")
             console.log(comment.body);
-            const match = comment.body?.match(/\[bot-tag\]: action-data sha=(\w{7,40})/);
+            const match = comment.body?.match(/<!--\s*action-data\s+sha=(\w{7,40})\s*-->/);
             console.log(match);
             return match && match[1] !== currentSha;
           });
@@ -56,7 +57,7 @@ runs:
           const output = `
           ### Terraform plan for ${{ inputs.working-directory }}
 
-          <!-- github-action-data sha=${currentSha} -->
+          <!-- action-data sha=${currentSha} -->
 
           <details><summary>Show Plan</summary>
  
@@ -64,9 +65,7 @@ runs:
           ${{ steps.plan.outputs.plan }}
           \`\`\`
  
-          </details>
-          
-          [bot-tag]: action-data sha=${currentSha}`;
+          </details>`;
  
           github.rest.issues.createComment({
             issue_number: context.issue.number,
