@@ -33,7 +33,9 @@ runs:
           // Filter out comments made by the bot and delete them
           const botCommentsToDelete = comments.filter(comment => {
             if (comment.user.login !== author) return false;
+            console.log(comment.body);
             const match = comment.body?.match(/\[bot-tag\]: action-data sha=(\w{7,40})/);
+            console.log(match);
             return match && match[1] !== currentSha;
           });
           
