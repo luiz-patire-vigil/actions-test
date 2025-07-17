@@ -34,9 +34,10 @@ runs:
           const botCommentsToDelete = comments.filter(comment => {
             if (comment.user.login !== author) return false;
             console.log("START HERE")
-            console.log(comment.body);
             const match = comment.body?.match(/<!--\s*action-data\s+sha=(\w{7,40})\s*-->/);
-            console.log(match);
+            console.log(currentSha);
+            console.log(match[1]);
+            console.log(match[1] !== currentSha);
             return match && match[1] !== currentSha;
           });
           
