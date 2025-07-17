@@ -52,8 +52,9 @@ runs:
           const currentSha = process.env.GITHUB_SHA;
 
           const output = `
-          <!-- github-action-data sha=${currentSha} -->
           ### Terraform plan for ${{ inputs.working-directory }}
+          
+          <!-- github-action-data sha=${currentSha} -->
 
           <details><summary>Show Plan</summary>
  
