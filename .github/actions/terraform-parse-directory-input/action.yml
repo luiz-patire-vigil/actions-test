@@ -18,12 +18,12 @@ runs:
     - name: Use input directories
       shell: bash
       id: set-input
-      if: ${{ inputs.dirs != '' }}
+      if: ${{ inputs.dir-list != '' }}
       run: |
-        echo "Processing input directories: ${{ inputs.dirs }}"
+        echo "Processing input directories: ${{ inputs.dir-list }}"
 
         # Convert comma-separated to array, trim whitespace
-        IFS=',' read -ra DIRS <<< "${{ inputs.dirs }}"
+        IFS=',' read -ra DIRS <<< "${{ inputs.dir-list }}"
         CLEAN_DIRS=()
         for dir in "${DIRS[@]}"; do
           clean_dir="${dir#"${dir%%[![:space:]]*}"}"  # trim leading
@@ -42,5 +42,5 @@ runs:
 
     - name: Detect changed directories (fallback)
       id: detect-changes
-      if: ${{ inputs.dirs == '' }}
+      if: ${{ inputs.dir-list == '' }}
       uses: luiz-patire-vigil/actions-test/.github/actions/terraform-detect-changes@main
