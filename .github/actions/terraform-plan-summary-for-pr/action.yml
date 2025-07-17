@@ -36,8 +36,10 @@ runs:
             console.log("START HERE")
             const match = comment.body?.match(/<!--\s*action-data\s+sha=(\w{7,40})\s*-->/);
             console.log(currentSha);
-            console.log(match[1]);
-            console.log(match[1] !== currentSha);
+            if (match) {
+              console.log(match[1]);
+              console.log(match[1] !== currentSha);
+            }
             return match && match[1] !== currentSha;
           });
           
