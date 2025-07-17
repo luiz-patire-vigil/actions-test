@@ -51,7 +51,7 @@ jobs:
     outputs:
       dirs: ${{ steps.parse-input.outputs.dirs }}
     steps:
-      - name: Use input directories
+      - name: Parse input directories
         id: parse-input
         uses: luiz-patire-vigil/actions-test/.github/actions/terraform-parse-directory-input@main
         with:

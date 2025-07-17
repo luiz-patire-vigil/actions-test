@@ -1,4 +1,4 @@
-name: Validate Terraform on Push
+name: Terraform Apply 
 
 # Workflows calling this workflow should set
 # permissions:
@@ -51,8 +51,7 @@ jobs:
         uses: luiz-patire-vigil/actions-test/.github/actions/terraform-parse-directory-input@main
         with:
           dir-list: ${{ inputs.dir-list }}
-
-  validate:
+  apply:
     runs-on: ubuntu-latest
     needs: set-working-directory-values
     strategy:
@@ -71,10 +70,7 @@ jobs:
           aws-region: ${{ secrets.aws-region }}
           modules-private-keys : ${{ secrets.modules-private-keys }}
 
-      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-validate@main
+      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-apply@main
         with:
           working-directory: ${{ matrix.working-directory }}
-
-      - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-plan@main
-        with:
-          working-directory: ${{ matrix.working-directory }}
+        
