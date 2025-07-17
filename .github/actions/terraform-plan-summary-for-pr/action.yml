@@ -21,6 +21,7 @@ runs:
       with:
         script: |
           const author = 'github-actions[bot]';
+          const currentSha = process.env.GITHUB_SHA;
           
           // List all comments
           const { data: comments } = await github.rest.issues.listComments({
@@ -30,8 +31,13 @@ runs:
           });
 
           // Filter out comments made by the bot and delete them
-          const botComments = comments.filter(comment => comment.user.login === author);
-          for (const comment of botComments) {
+          const botCommentsToDelete = comments.filter(comment => {
+            if (comment.user.login !== author) return false;
+            const match = comment.body?.match(/<!--\s*github-action-data\s+sha=(\w{7,40})\s*-->/);
+            return match && match[1] !== currentSha;
+          });
+          
+          for (const comment of botCommentsToDelete) {
             await github.rest.issues.deleteComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -43,7 +49,10 @@ runs:
       uses: actions/github-script@v7
       with:
         script: |
+          const currentSha = process.env.GITHUB_SHA;
+
           const output = `
+          <!-- github-action-data sha=${currentSha} -->
           ### Terraform plan for ${{ inputs.working-directory }}
 
           <details><summary>Show Plan</summary>
