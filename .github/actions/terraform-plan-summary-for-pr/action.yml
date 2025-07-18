@@ -1,6 +1,12 @@
 name: Terraform Plan Summary for Pull Requests
 description: Run plan and reports it on a comment in a pull request.
 
+# Workflows using this action need the following permissions:
+# permissions:
+#   issues: write
+#   pull-requests: write
+
+
 inputs:
   working-directory:
     description: Directory where Terraform code is located.

@@ -7,6 +7,16 @@ inputs:
     required: false
     default: ""
 
+  base-ref:
+    required: false
+    type: string
+    default: origin/main
+
+  merge-ref:
+    required: false
+    type: string
+    default: HEAD
+
 outputs:
   dirs:
     description: Modified directories.
@@ -44,3 +54,6 @@ runs:
       id: detect-changes
       if: ${{ inputs.dir-list == '' }}
       uses: luiz-patire-vigil/actions-test/.github/actions/terraform-detect-changes@main
+      with:
+        base-ref: ${{ inputs.base-ref}}
+        merge-ref: ${{ inputs.merge-ref}}

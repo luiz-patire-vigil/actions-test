@@ -1,5 +1,16 @@
 name: Detect Changes 
-description: Detect changes in terraform files within the directory tree, returning the directory list.
+description: Detect changes in Terraform files within the directory tree, returning the directory list.
+
+inputs:
+  base-ref:
+    required: false
+    type: string
+    default: origin/main
+
+  merge-ref:
+    required: false
+    type: string
+    default: HEAD
 
 outputs:
   dirs:
@@ -18,10 +29,10 @@ runs:
       id: check-dirs
       shell: bash
       run: |
-        echo "Detecting modified directories (fallback)"
+        echo "Detecting modified directories"
         echo "Changed files detected: "
-        echo $(git diff --name-only origin/main...HEAD)
-        folders=$(git diff --name-only origin/main...HEAD \
+        echo $(git diff --name-only ${{ inputs.base-ref }}...${{ inputs.merge-ref }})
+        folders=$(git diff --name-only ${{ inputs.base-ref }}...${{ inputs.merge-ref }} \
           | grep -E '\.tf$|\.tfvars$' \
           | xargs -n1 dirname \
           | sort -u \

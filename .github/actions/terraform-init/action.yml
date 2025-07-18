@@ -1,5 +1,5 @@
 name: Terraform Init
-description: Setup terraform, authentication and run init on a Terraform directory
+description: Setup Terraform, authentication and run init on a Terraform directory
 
 # Workflows using this action need the following permissions:
 # permissions:

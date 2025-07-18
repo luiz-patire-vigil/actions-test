@@ -1,11 +1,6 @@
 name: Terraform Plan
 description: Composite action to run Terraform plant, giving it as an output.
 
-# Workflows using this action need the following permissions:
-# permissions:
-#   issues: write
-#   pull-requests: write
-
 inputs:
   working-directory:
     description: Directory where Terraform code is located.
@@ -18,7 +13,7 @@ outputs:
     value: ${{ steps.tf-plan.outputs.stdout }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Terraform Plan
       id: tf-plan

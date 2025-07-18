@@ -1,5 +1,5 @@
 name: Terraform Apply
-description: Run terraform plan and apply.
+description: Run Terraform apply.
 
 inputs:
   working-directory:
