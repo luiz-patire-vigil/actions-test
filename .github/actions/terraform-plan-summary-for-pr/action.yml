@@ -6,7 +6,6 @@ description: Run plan and reports it on a comment in a pull request.
 #   issues: write
 #   pull-requests: write
 
-
 inputs:
   working-directory:
     description: Directory where Terraform code is located.
@@ -39,13 +38,7 @@ runs:
           // Filter out comments made by the bot and delete them
           const botCommentsToDelete = comments.filter(comment => {
             if (comment.user.login !== author) return false;
-            console.log("START HERE")
             const match = comment.body?.match(/<!--\s*action-data\s+sha=(\w{7,40})\s*-->/);
-            console.log(currentSha);
-            if (match) {
-              console.log(match[1]);
-              console.log(match[1] !== currentSha);
-            }
             return match && match[1] !== currentSha;
           });
           
