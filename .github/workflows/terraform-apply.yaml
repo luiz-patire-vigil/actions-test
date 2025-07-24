@@ -65,6 +65,7 @@ jobs:
           merge-ref: ${{ inputs.merge-ref}}
 
   apply:
+    if: needs.set-working-directory-values.outputs.dirs != '[]'
     runs-on: ubuntu-latest
     needs: set-working-directory-values
     strategy:
