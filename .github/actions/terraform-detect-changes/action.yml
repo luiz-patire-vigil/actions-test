@@ -30,13 +30,21 @@ runs:
       shell: bash
       run: |
         echo "Detecting modified directories"
-        echo "Changed files detected: "
-        echo $(git diff --name-only ${{ inputs.base-ref }}...${{ inputs.merge-ref }})
-        folders=$(git diff --name-only ${{ inputs.base-ref }}...${{ inputs.merge-ref }} \
-          | grep -E '\.tf$|\.tfvars$' \
-          | xargs -n1 dirname \
-          | sort -u \
-          | jq -R . \
-          | jq -sc .)
-        echo "Changed dirs detected:  $folders"
-        echo "dirs=$folders" >> $GITHUB_OUTPUT
+        changed_files=$(git diff --name-only ${{ inputs.base-ref }}...${{ inputs.merge-ref }})
+        echo "Changed files detected:"
+        echo "$changed_files"
+
+        tf_files=$(echo "$changed_files" | grep -E '\.tf$|\.tfvars$' || true)
+
+        if [ -z "$tf_files" ]; then
+          echo "No Terraform-related files changed."
+          echo "dirs=[]" >> $GITHUB_OUTPUT
+        else
+          folders=$(echo "$tf_files" \
+            | xargs -n1 dirname \
+            | sort -u \
+            | jq -R . \
+            | jq -sc .)
+          echo "Changed dirs detected: $folders"
+          echo "dirs=$folders" >> $GITHUB_OUTPUT
+        fi
