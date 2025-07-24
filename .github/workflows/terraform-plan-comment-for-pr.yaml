@@ -58,6 +58,7 @@ jobs:
           dir-list: ${{ inputs.dir-list }}
 
   plan-report:
+    if: needs.set-working-directory-values.outputs.dirs != '[]'
     needs: set-working-directory-values
     runs-on: ubuntu-latest
     strategy:
