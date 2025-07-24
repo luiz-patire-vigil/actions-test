@@ -27,7 +27,7 @@ runs:
         script: |
           const author = 'github-actions[bot]';
           const currentSha = process.env.GITHUB_SHA;
-          
+
           // List all comments
           const { data: comments } = await github.rest.issues.listComments({
             issue_number: context.issue.number,
@@ -41,7 +41,7 @@ runs:
             const match = comment.body?.match(/<!--\s*action-data\s+sha=(\w{7,40})\s*-->/);
             return match && match[1] !== currentSha;
           });
-          
+
           for (const comment of botCommentsToDelete) {
             await github.rest.issues.deleteComment({
               owner: context.repo.owner,
@@ -62,13 +62,13 @@ runs:
           <!-- action-data sha=${currentSha} -->
 
           <details><summary>Show Plan</summary>
- 
+
           \`\`\`\n
           ${{ steps.plan.outputs.plan }}
           \`\`\`
- 
+
           </details>`;
- 
+
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,

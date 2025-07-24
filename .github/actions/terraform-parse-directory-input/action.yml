@@ -1,4 +1,4 @@
-name: Terraform Handle Directory Input 
+name: Terraform Handle Directory Input
 description: Parses directory input or fallbacks to auto discovery.
 
 inputs:

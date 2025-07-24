@@ -1,4 +1,4 @@
-name: Terraform Apply 
+name: Terraform Apply
 
 # Workflows calling this workflow should set
 # permissions:
@@ -42,7 +42,7 @@ on:
         required: false
 
       modules-private-keys:
-        description: Private key for TF to access the one-terraform-modules repository. 
+        description: Private key for TF to access the one-terraform-modules repository.
         required: false
 
 permissions:
@@ -86,4 +86,3 @@ jobs:
       - uses: luiz-patire-vigil/actions-test/.github/actions/terraform-apply@main
         with:
           working-directory: ${{ matrix.working-directory }}
-        

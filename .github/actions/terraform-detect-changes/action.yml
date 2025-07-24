@@ -1,4 +1,4 @@
-name: Detect Changes 
+name: Detect Changes
 description: Detect changes in Terraform files within the directory tree, returning the directory list.
 
 inputs:
@@ -22,7 +22,7 @@ runs:
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:  
+      with:
         fetch-depth: 0
 
     - name: Check modified directories
